@@ -1,0 +1,65 @@
+Je meester bedoelt met "je controllers zijn niets anders dan je endpoints" dat je controllers de plekken
+zijn waar je API requests (zoals GET, POST, PUT, DELETE) binnenkomen en verwerkt worden.
+Controllers bepalen welke acties worden uitgevoerd wanneer een gebruiker een bepaalde URL aanroept.
+
+Laten we dit stap voor stap ontleden:
+
+1. Wat zijn endpoints?
+Een endpoint is een specifieke URL waarop een API reageert. Bijvoorbeeld:
+
+http://localhost:8080/api/subscriptions
+
+Dit is een endpoint dat verwijst naar de FormController-klasse in jouw project.
+
+2. Wat doet een controller?
+In jouw project heb je de klasse FormController, en die is gemarkeerd met @Path("/subscriptions").
+
+Dit betekent dat als iemand de API aanroept met http://localhost:8080/api/subscriptions, deze request
+wordt doorgestuurd naar FormController.
+
+Wat je meester zegt:
+
+"Controllers zijn je endpoints" betekent dat jouw controllers de ingangen (entry points) van jouw API zijn.
+
+Elke controller handelt een bepaald deel van de API af. Bijvoorbeeld:
+
+@Path("/users")
+public class UserController { }
+
+Dit zou het endpoint /api/users aanmaken.
+
+Alle requests naar /api/users worden in UserController verwerkt.
+
+3. Wat doet die server precies?
+Wanneer je de API runt, start een embedded server zoals Jetty of een andere servlet-container.
+
+De server zorgt ervoor dat inkomende HTTP-verzoeken naar de juiste controller worden gestuurd.
+
+In jouw geval gebruik je Jersey, een framework dat JAX-RS ondersteunt om REST APIs te bouwen.
+
+Hoe werkt dit in jouw project?
+
+In ApplicationConfig heb je dit stuk code:
+
+java
+Copy
+Edit
+properties.put("jersey.config.server.provider.packages", "sr.unasat.form.api.controllers");
+
+
+Dit vertelt Jersey waar het moet zoeken naar controllers.
+
+De server start en Jersey zorgt ervoor dat een GET-request naar http://localhost:8080/api/subscriptions
+wordt doorgestuurd naar FormController.
+
+4. Waarom gebruiken we een server?
+Een API werkt via HTTP-verzoeken en moet continu beschikbaar zijn om requests te ontvangen.
+
+De server (zoals Jetty, Tomcat, of GlassFish) houdt de API draaiende en zorgt ervoor dat verzoeken worden verwerkt.
+
+5. Wat gebeurt er als je de API runt?
+De server start en luistert naar HTTP-verzoeken op een bepaalde poort (bijv. 8080).
+
+Als je een request stuurt naar http://localhost:8080/api/subscriptions, stuurt de server dit door naar FormController.
+
+Als FormController methodes zoals GET, POST, PUT, of DELETE bevat, worden die uitgevoerd.

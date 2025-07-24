@@ -1,0 +1,102 @@
+Ik ga alles stap voor stap uitleggen.
+
+1. GET-methode en @Produces
+Waarom heeft een GET-methode een @Produces?
+@GET betekent dat de methode wordt aangeroepen wanneer een HTTP GET-request wordt gedaan.
+
+@Produces(MediaType.APPLICATION_JSON) betekent dat de server de response terugstuurt in JSON-formaat.
+
+De reden waarom een GET-methode JSON "produceert", is omdat de client (bijvoorbeeld een frontend-app of Postman)
+verwacht data in een gestructureerd formaat te ontvangen.
+
+Het JSON-formaat is hier handig, omdat het makkelijk leesbaar is voor API-gebruikers en
+eenvoudig geconverteerd kan worden naar Java-objecten of JavaScript-objecten.
+
+Wat gebeurt er onder water?
+
+De client stuurt een GET-request naar http://localhost:8080/api/subscriptions/all.
+
+De server zoekt de juiste methode (findAll() in dit geval).
+
+De lijst subscriptionList wordt als return-waarde van de methode gegeven.
+
+Omdat @Produces(MediaType.APPLICATION_JSON) is ingesteld, wordt de lijst automatisch omgezet naar JSON en teruggestuurd naar de client.
+
+Voorbeeld van een JSON-response:
+
+json
+Copy
+Edit
+[
+  {
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john.doe@example.com",
+    "phonenumber": "123456789"
+  },
+  {
+    "firstname": "Jane",
+    "lastname": "Doe",
+    "email": "jane.doe@example.com",
+    "phonenumber": "987654321"
+  }
+]
+2. POST-methode en @Consumes + @Produces
+Waarom hebben we @Consumes bij een POST-methode?
+@POST betekent dat de methode wordt aangeroepen wanneer een HTTP POST-request wordt gedaan.
+
+@Consumes(MediaType.APPLICATION_JSON) betekent dat de server verwacht dat de client JSON-data stuurt.
+
+@Produces(MediaType.APPLICATION_JSON) betekent dat de server de response ook in JSON teruggeeft.
+
+Wat gebeurt er onder water?
+
+De client stuurt een POST-request naar http://localhost:8080/api/subscriptions/add met JSON-data:
+
+json
+Copy
+Edit
+{
+  "firstname": "Alice",
+  "lastname": "Smith",
+  "email": "alice.smith@example.com",
+  "phonenumber": "123123123"
+}
+De server ontvangt deze JSON en zet het om naar een Java-object (SubscriptionDTO).
+
+Het Java-object wordt toegevoegd aan subscriptionList.
+
+De server stuurt het object terug in JSON-formaat als bevestiging.
+
+3. Waarom gebruiken we SubscriptionDTO als returntype?
+Wat is een DTO?
+Een Data Transfer Object (DTO) is een object dat data vervoert tussen de frontend en de backend.
+
+Waarom gebruiken we SubscriptionDTO als returntype in de methode?
+java
+Copy
+Edit
+public SubscriptionDTO add(SubscriptionDTO subscription) {
+    subscriptionList.add(subscription);
+    return subscription;
+}
+Hier wordt SubscriptionDTO als returntype gebruikt in plaats van void of String, zodat de client de bevestigde data kan ontvangen.
+
+Dit helpt om te valideren dat de data correct is verwerkt.
+
+Wat is het voordeel hiervan?
+Als je bijvoorbeeld een void zou gebruiken, dan weet de client niet of de toevoeging succesvol was.
+
+Met SubscriptionDTO als returntype, kan de client direct het toegevoegde object zien en eventueel
+extra acties uitvoeren (bijvoorbeeld een bevestigingsbericht tonen).
+
+4. Hoe werkt het versturen van data van frontend naar backend?
+Frontend stuurt JSON naar de backend (bijvoorbeeld via een React-app of Postman).
+
+Backend ontvangt JSON en zet het om in een Java-object (SubscriptionDTO).
+
+Backend verwerkt de data (bijv. toevoegen aan een lijst of database).
+
+Backend stuurt JSON terug naar frontend als bevestiging.
+
+Dit is de kernlogica van hoe RESTful API’s werken.
